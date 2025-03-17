@@ -36,7 +36,16 @@ jobs:
 
       - name: Check pgAdmin health
         run: |
-          curl -s -o /dev/null -w "%{http_code}" http://localhost:15432/login | grep 200
+          for i in {1..10}; do
+            if curl -s -o /dev/null -w "%{http_code}" http://localhost:15432/login | grep 200; then
+              echo "pgAdmin is ready!"
+              exit 0
+            fi
+            echo "Waiting for pgAdmin to start... (Attempt $i)"
+            sleep 5
+          done
+          echo "pgAdmin did not start within 50 seconds"
+          exit 1
 
       - name: Stop containers
         run: docker compose down -v
