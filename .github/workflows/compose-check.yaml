@@ -31,9 +31,6 @@ jobs:
       - name: Start containers
         run: docker compose up -d
 
-      - name: Wait for PostgreSQL
-        run: docker compose wait database
-
       - name: Check PostgreSQL connectivity
         run: docker compose exec database pg_isready -U ${POSTGRES_USER}
 
